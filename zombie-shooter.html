@@ -160,16 +160,21 @@
 
         // Handle keyboard input
         window.addEventListener('keydown', function(event) {
-            if (event.key === '<') { // Move left
+            // Move left
+            if (event.key === '<' || event.key === 'ArrowLeft') {
                 player.x -= 10;
-            } else if (event.key === '>') { // Move right
+            }
+            // Move right
+            else if (event.key === '>' || event.key === 'ArrowRight') {
                 player.x += 10;
-            } else if (event.key === ' ') { // Jump
-                if (!player.jumping) {
-                    player.jumping = true;
-                    player.velocityY = jumpStrength; // Set jump velocity
-                }
-            } else if (event.key === 'c') { // 'c' key to craft spear
+            }
+            // Jump
+            else if (event.key === ' ' && !player.jumping) {
+                player.jumping = true;
+                player.velocityY = jumpStrength; // Set jump velocity
+            }
+            // Craft a spear
+            else if (event.key === 'c') {
                 craftSpear();
             }
             checkTreeCollision(); // Check for collision with trees
@@ -189,4 +194,4 @@
         init();
     </script>
 </body>
-</html>89
+</html>
