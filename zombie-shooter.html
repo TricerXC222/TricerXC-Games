@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Zombie Shooter Game with Crafting</title>
+    <style>
+        canvas {
+            background: #cce5ff;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game variables
+        let player = { x: 400, y: 300, width: 30, height: 30, coins: 0, wood: 0, hasSpear: false, velocityY: 0, jumping: false };
+        let zombies = [];
+        let trees = [];
+        const zombieSpawnRate = 1000; // milliseconds
+        const gravity = 0.5; // Gravity effect
+        const jumpStrength = -10; // Jump strength
+        let isGameRunning = true;
+        const spearCraftingCost = 3; // Wood needed to craft a spear
+
+        // Initialize game elements
+        function init() {
+            spawnTree(200, 200);
+            spawnTree(300, 250);
+            spawnTree(500, 400);
+            setInterval(spawnZombie, zombieSpawnRate);
+            gameLoop();
+        }
+
+        // Game loop
+        function gameLoop() {
+            if (!isGameRunning) return;
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Update game state
+        function update() {
+            // Apply gravity
+            if (player.jumping) {
+                player.velocityY += gravity;
+                player.y += player.velocityY;
+
+                // Check for landing
+                if (player.y >= 300) { // Ground level
+                    player.y = 300;
+                    player.jumping = false;
+                    player.velocityY = 0; // Reset velocity
+                }
+            }
+
+            zombies.forEach(zombie => {
+                zombie.y += 1; // Zombies move downwards
+                if (zombie.y > canvas.height) {
+                    zombies.splice(zombies.indexOf(zombie), 1);
+                }
+            });
+        }
+
+        // Render game elements
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawZombies();
+            drawTrees();
+            drawScore();
+        }
+
+        // Draw player
+        function drawPlayer() {
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            if (player.hasSpear) {
+                ctx.fillStyle = 'orange';
+                ctx.fillRect(player.x + 10, player.y - 10, 10, 30); // Draw spear above player
+            }
+        }
+
+        // Draw zombies
+        function drawZombies() {
+            ctx.fillStyle = 'green';
+            zombies.forEach(zombie => {
+                ctx.fillRect(zombie.x, zombie.y, zombie.width, zombie.height);
+            });
+        }
+
+        // Draw trees
+        function drawTrees() {
+            ctx.fillStyle = 'brown';
+            trees.forEach(tree => {
+                ctx.fillRect(tree.x, tree.y, tree.width, tree.height);
+            });
+        }
+
+        // Draw score
+        function drawScore() {
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Coins: ${player.coins}`, 10, 20);
+            ctx.fillText(`Wood: ${player.wood}`, 10, 40);
+            ctx.fillText(`Has Spear: ${player.hasSpear ? 'Yes' : 'No'}`, 10, 60);
+        }
+
+        // Spawn a zombie
+        function spawnZombie() {
+            const zombie = {
+                x: Math.random() * (canvas.width - 30),
+                y: 0,
+                width: 30,
+                height: 30
+            };
+            zombies.push(zombie);
+        }
+
+        // Spawn a tree
+        function spawnTree(x, y) {
+            const tree = {
+                x: x,
+                y: y,
+                width: 20,
+                height: 50
+            };
+            trees.push(tree);
+        }
+
+        // Check for collision with trees
+        function checkTreeCollision() {
+            trees.forEach(tree => {
+                if (player.x < tree.x + tree.width &&
+                    player.x + player.width > tree.x &&
+                    player.y < tree.y + tree.height &&
+                    player.y + player.height > tree.y) {
+                    player.wood += 1; // Collect wood
+                    trees.splice(trees.indexOf(tree), 1); // Remove the tree
+                }
+            });
+        }
+
+        // Craft a spear
+        function craftSpear() {
+            if (player.wood >= spearCraftingCost) {
+                player.wood -= spearCraftingCost; // Deduct wood
+                player.hasSpear = true; // Player now has a spear
+                alert("You crafted a spear!");
+            } else {
+                alert("Not enough wood to craft a spear!");
+            }
+        }
+
+        // Handle keyboard input
+        window.addEventListener('keydown', function(event) {
+            if (event.key === '<') { // Move left
+                player.x -= 10;
+            } else if (event.key === '>') { // Move right
+                player.x += 10;
+            } else if (event.key === ' ') { // Jump
+                if (!player.jumping) {
+                    player.jumping = true;
+                    player.velocityY = jumpStrength; // Set jump velocity
+                }
+            } else if (event.key === 'c') { // 'c' key to craft spear
+                craftSpear();
+            }
+            checkTreeCollision(); // Check for collision with trees
+            // Check for shooting zombies
+            zombies.forEach(zombie => {
+                if (player.x < zombie.x + zombie.width &&
+                    player.x + player.width > zombie.x &&
+                    player.y < zombie.y + zombie.height &&
+                    player.y + player.height > zombie.y) {
+                    player.coins += 1; // Earn a coin for each zombie killed
+                    zombies.splice(zombies.indexOf(zombie), 1); // Remove the zombie
+                }
+            });
+        });
+
+        // Start the game
+        init();
+    </script>
+</body>
+</html>89
