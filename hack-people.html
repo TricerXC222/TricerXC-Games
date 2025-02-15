@@ -3,7 +3,39 @@
 <head>
 <title>Hacker Client Simulator</title>
 <style>
-/* ... (styles remain the same) ... */
+body {
+  font-family: monospace;
+  background-color: #000;
+  color: #0f0;
+}
+#terminal {
+  width: 80%;
+  margin: 20px auto;
+  border: 2px solid #0f0;
+  padding: 10px;
+  overflow: auto;
+  height: 400px;
+}
+#command-input {
+  width: 80%;
+  margin: 10px auto;
+  background-color: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 5px;
+  font-family: monospace;
+}
+#hack-button {
+    margin: 10px auto;
+    display: block; /* Make the button a block element so it centers nicely */
+    background-color: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 5px 10px; /* Adjust padding as needed */
+    font-family: monospace;
+    cursor: pointer; /* Make it look clickable */
+}
+
 </style>
 </head>
 <body>
@@ -17,19 +49,21 @@
 <input type="text" id="command-input" placeholder="Enter command...">
 <button id="hack-button">Hack</button>
 
+
 <script>
-// ... (other code remains the same) ...
+const terminal = document.getElementById('terminal');
+const commandInput = document.getElementById('command-input');
+const hackButton = document.getElementById('hack-button');
 
-function generateRandomEmail() {
-    const names = ["john", "jane", "david", "sarah", "michael", "emily", "william", "jessica", "christopher", "ashley"];
-    const domains = ["@gmail.com", "@hotmail.com"];
+commandInput.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    executeCommand();
+  }
+});
 
-    const randomName = names[Math.floor(Math.random() * names.length)];
-    const randomNumber = Math.floor(Math.random() * 100); // Add a random number
-    const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-
-    return `${randomName}${randomNumber}${randomDomain}`;
-}
+hackButton.addEventListener('click', function() {
+  executeCommand();
+});
 
 function executeCommand() {
     const command = commandInput.value;
@@ -37,21 +71,18 @@ function executeCommand() {
 
     let response = "";
     if (command.startsWith("scan")) {
-        // ... (scan command logic)
+        response = "<p>Scanning ports...</p><p>Port 80: Open</p><p>Port 443: Open</p>";
     } else if (command.startsWith("exploit")) {
-        // ... (exploit command logic)
+        response = "<p>Exploiting vulnerability...</p><p>Access granted!</p>";
     } else if (command.startsWith("hack")) {
-        // ... (hack command logic)
+        response = "<p>Bypassing firewall...</p><p>Data exfiltrated successfully.</p>";
     } else if (command.startsWith("email")) {
-        const email = command.substring(6).trim();
+        const email = command.substring(6).trim(); // Extract email
         if (email) {
             response = `<p>Attempting to hack ${email}...</p><p>Email hacked successfully! (Simulated)</p>`;
         } else {
             response = "<p>Please provide an email address after the 'email' command.</p>";
         }
-    } else if (command === "hack:email") {
-        const randomEmail = generateRandomEmail();
-        response = `<p>Generated random email: ${randomEmail}</p>`;
     } else {
         response = "<p>Command not recognized.</p>";
     }
@@ -61,7 +92,7 @@ function executeCommand() {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-// ... (rest of the code remains the same) ...
+
 </script>
 
 </body>
