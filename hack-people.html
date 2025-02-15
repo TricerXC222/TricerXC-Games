@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hacker Client Simulator</title>
+<style>
+body {
+  font-family: monospace;
+  background-color: #000;
+  color: #0f0;
+}
+#terminal {
+  width: 80%;
+  margin: 20px auto;
+  border: 2px solid #0f0;
+  padding: 10px;
+  overflow: auto;
+  height: 400px;
+}
+#command-input {
+  width: 80%;
+  margin: 10px auto;
+  background-color: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 5px;
+  font-family: monospace;
+}
+#hack-button {
+    margin: 10px auto;
+    display: block; /* Make the button a block element so it centers nicely */
+    background-color: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 5px 10px; /* Adjust padding as needed */
+    font-family: monospace;
+    cursor: pointer; /* Make it look clickable */
+}
+
+</style>
+</head>
+<body>
+
+<h1>Hacker Client Simulator</h1>
+
+<div id="terminal">
+  <p>Connecting to target...</p>
+</div>
+
+<input type="text" id="command-input" placeholder="Enter command...">
+<button id="hack-button">Hack</button>
+
+
+<script>
+const terminal = document.getElementById('terminal');
+const commandInput = document.getElementById('command-input');
+const hackButton = document.getElementById('hack-button');
+
+commandInput.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    executeCommand();
+  }
+});
+
+hackButton.addEventListener('click', function() {
+  executeCommand();
+});
+
+function executeCommand() {
+    const command = commandInput.value;
+    terminal.innerHTML += `<p>&gt; ${command}</p>`;
+
+    let response = "";
+    if (command.startsWith("scan")) {
+        response = "<p>Scanning ports...</p><p>Port 80: Open</p><p>Port 443: Open</p>";
+    } else if (command.startsWith("exploit")) {
+        response = "<p>Exploiting vulnerability...</p><p>Access granted!</p>";
+    } else if (command.startsWith("hack")) {
+        response = "<p>Bypassing firewall...</p><p>Data exfiltrated successfully.</p>";
+    } else if (command.startsWith("email")) {
+        const email = command.substring(6).trim(); // Extract email
+        if (email) {
+            response = `<p>Attempting to hack ${email}...</p><p>Email hacked successfully! (Simulated)</p>`;
+        } else {
+            response = "<p>Please provide an email address after the 'email' command.</p>";
+        }
+    } else {
+        response = "<p>Command not recognized.</p>";
+    }
+
+    terminal.innerHTML += response;
+    commandInput.value = '';
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+
+</script>
+
+</body>
+</html>
