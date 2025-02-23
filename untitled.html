@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>untitled</title>
+     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: #000; /* Default background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+        }
+
+        #game-canvas {
+            background-color: #333; /* Game canvas background */
+            border: 2px solid #fff; /* Optional border */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="game-canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game Variables
+        let gameWidth = 800;
+        let gameHeight = 600;
+
+        canvas.width = gameWidth;
+        canvas.height = gameHeight;
+
+        // Game Loop
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Update Game Logic
+        function update() {
+            // Your game logic goes here
+            // Example:
+            // player.x += player.speed;
+        }
+
+        // Draw Game Elements
+        function draw() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, gameWidth, gameHeight);
+
+            // Your drawing code goes here
+            // Example:
+            // ctx.fillStyle = 'red';
+            // ctx.fillRect(player.x, player.y, 50, 50);
+        }
+
+        // Start the game loop
+        gameLoop();
+
+        // Input Handling (Example)
+        document.addEventListener('keydown', (event) => {
+            // Example:
+            // if (event.key === 'ArrowRight') {
+            //     player.speed = 5;
+            // }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            // Example:
+            // if (event.key === 'ArrowRight') {
+            //     player.speed = 0;
+            // }
+        });
+
+        // Example Player Object
+        let player = {
+            x: gameWidth / 2 - 25,
+            y: gameHeight / 2 - 25,
+            speed: 0
+        };
+
+        // Example loading images:
+        /*
+        const playerImage = new Image();
+        playerImage.src = 'player.png'; // Place your image in the same directory.
+        playerImage.onload = function() {
+          //image has loaded, you can now use it.
+        }
+
+        function draw(){
+            ctx.drawImage(playerImage, player.x, player.y);
+        }
+        */
+        //Example Sound:
+        /*
+        const sound = new Audio('sound.wav'); // Place your sound file in the same directory.
+        function playSound() {
+            sound.play();
+        }
+
+        document.addEventListener('click', playSound); //example play sound on click
+        */
+
+    </script>
+</body>
+</html>
